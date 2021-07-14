@@ -33,7 +33,7 @@ We compare different types of controllers that vary along two major feature dime
 
 ![Overview of the size of the HalfCheetah agent compared to the Ant agent](ant_halfCheetah.png)
 
-Architectures Description:
+**Architectures Description:**
 
 - Centralized: 1 Centralized agent.
 - TwoSides: 2 agents fully decentralized.
