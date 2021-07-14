@@ -30,7 +30,7 @@ data_smoothn_steps = np.array([1., 0.9, 0.8, 0.7, 0.6])
 # 0 - centralized, 1 - fully dec, 2 - local, 
 # 7 - two side controllers are used.
 # Load data from evaluation runs.
-path = os.getcwd() + '/Results/3_trained_cur_tvel_eval' # use your path
+path = "/home/nitro/ray_results/Tvel_eight_QuantrupedMultiEnv_Centralized_TVel" # use your path
 all_files = glob.glob(path + "/*.csv")
 
 eval_list = []
@@ -39,6 +39,7 @@ for filename in all_files:
     df = pd.read_csv(filename, index_col=None, header=0)
     eval_list.append(df)
 
+print(all_files)
 df = pd.concat(eval_list, axis=0, ignore_index=True)
 
 exp_name = ['Centralized', 'FullyDecentral', 'Local', 'SingleDiagonal',

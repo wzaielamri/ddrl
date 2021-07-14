@@ -20,13 +20,12 @@ data_smoothn_steps = np.array([1., 0.9, 0.8, 0.7, 0.6])
 # Aiming for target velocity.
 # evaluated on 4 different uneven terrain (see smoothness above, 1. = flat).
 # Used are only architectures 0,1,2,7
-exp_name = ['Centralized', 'FullyDecentral', 'Local', 'SingleDiagonal',
+exp_name = ['Centralized', 'FullyDecentral', 'EightFullyDecentral', 'JointNeighbors',
        'SingleNeighbor', 'SingleToFront', 'TwoDiags', 'TwoSides']
-exp_name_written = ['Centralized', 'Fully \n Decentralized', 'Local \n Neighbors', 
-    'Single \n Diag. N.', 'Single \n Neigh.', 'Towards \n Front',
-    'Two contr. \n diagonal', 'Two contr. \n neighbors']
-path = 'Results/3_trained_cur_tvel_eval' # use your path
-all_files = glob.glob(path + "/*.csv")
+exp_name_written = ['Centralized', 'Fully \n Decentralized', 'Eight \n Fully \n Decentralized', 'Joint \n Neighbors']
+
+path = "/home/nitro/ray_results/" # use your path
+all_files = glob.glob(path + "/Tvel*/**/*.csv")
 
 eval_list = []
 

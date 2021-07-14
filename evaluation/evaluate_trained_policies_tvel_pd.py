@@ -9,6 +9,7 @@ import pandas as pd
 from ray.tune.registry import get_trainable_cls
 from ray.rllib.evaluation.worker_set import WorkerSet
 
+
 import target_envs
 import models
 from evaluation.rollout_episodes import rollout_episodes
@@ -48,10 +49,10 @@ else:
     hf_smoothness_eval = 1.0
 
 # Loading trained models.
-exp_path = [os.getcwd() + '/Results/experiment_3_models_curriculum_tvel/Tvel_QuantrupedMultiEnv_Centralized_TVel', 
-    os.getcwd() + '/Results/experiment_3_models_curriculum_tvel/Tvel_QuantrupedMultiEnv_FullyDecentral_TVel',
-    os.getcwd() + '/Results/experiment_3_models_curriculum_tvel/Tvel_QuantrupedMultiEnv_Local_TVel',
-    os.getcwd() + '/Results/experiment_3_models_curriculum_tvel/Tvel_QuantrupedMultiEnv_TwoSides_TVel']
+exp_path = ["/home/nitro/ray_results/Tvel_eight_QuantrupedMultiEnv_Centralized_TVel",
+    "/home/nitro/ray_results/Tvel_eight_QuantrupedMultiEnv_FullyDecentral_TVel",
+    "/home/nitro/ray_results/Tvel_eight_QuantrupedMultiEnv_EightFullyDecentral_TVel",
+    "/home/nitro/ray_results/Tvel_eight_QuantrupedMultiEnv_EightDecentral_neighborJoint_TVel"]
     
 experiment_dirs = [[os.path.join(exp_path_item,dI) for dI in os.listdir(exp_path_item) if os.path.isdir(os.path.join(exp_path_item,dI))] for exp_path_item in exp_path]
 
@@ -66,7 +67,7 @@ else:
 exp_it = 0
 # Run through the different architectures.
 for exp_dir in experiment_dirs:
-    print("EVALUATE EXPERIMENT: ", exp_path[exp_it].split('_')[-1])
+    print("\nEVALUATE EXPERIMENT: ", exp_path[exp_it].split('_')[-2],"\n")
     exp_params = [os.path.join(exp_d, 'params.pkl') for exp_d in exp_dir]
     exp_checkpoint = [os.path.join(exp_d, 'checkpoint_1250', 'checkpoint-1250') for exp_d in exp_dir]
 
@@ -79,7 +80,7 @@ for exp_dir in experiment_dirs:
     
     # Run over all seeds.
     for experiment in range(0, len(exp_params) ):
-    
+        print(exp_dir)
         try:
             with open(exp_params[experiment], "rb") as f:
                 config = pickle.load(f)
@@ -102,7 +103,6 @@ for exp_dir in experiment_dirs:
             env = agent.workers.local_worker().env
         # Run 100 episodes for 1000 simulation steps and collect data.
         res_rollout = rollout_episodes(env, agent, num_episodes=100, num_steps=1000, render=False)
-        
         # Write detailed data to panda file.
         for sim_it in range(0, len(res_rollout[0])):
             new_pd_entry = pd.Series({"approach": exp_path[exp_it].split('_')[-2], 

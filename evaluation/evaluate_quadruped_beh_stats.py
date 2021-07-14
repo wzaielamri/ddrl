@@ -18,12 +18,10 @@ import glob
 data_smoothn_steps = np.array([1., 0.9, 0.8, 0.7, 0.6])
 # Data from generalization of architectures: architecture trained on flat terrain,
 # evaluated on 8 different uneven terrain (see smoothness above, 1. = flat).
-exp_name = ['Centralized', 'FullyDecentral', 'Local', 'SingleDiagonal',
-       'SingleNeighbor', 'SingleToFront', 'TwoDiags', 'TwoSides']
-exp_name_written = ['Centralized', 'Fully \n Decentralized', 'Local \n Neighbors', 
-    'Single \n Diag. N.', 'Single \n Neigh.', 'Towards \n Front',
-    'Two contr. \n diagonal', 'Two contr. \n neighbors']
-path = 'Results/1_trained_flat_eval' # use your path
+exp_name = ['Centralized', 'FullyDecentral', 'EightFullyDecentral', 'neighborJoint']
+exp_name_written = ['Centralized', 'Fully \n Decentralized', 'Eight \n Fully \n Decentralized', 'neighbor \n Joint']
+    
+path = '/home/nitro/ray_results' # use your path
 all_files = glob.glob(path + "/*.csv")
 
 eval_list = []
@@ -34,11 +32,11 @@ for filename in all_files:
 
 df = pd.concat(eval_list, axis=0, ignore_index=True)
 
-for i in range(0,8):
+for i,exp in enumerate(exp_name):
     mean_cots = []
     mean_returns = []
     mean_vels = []
-    for j in [0,2,4]:
+    for j in [0]:
         # Calculate mean velocity:
         overall_duration = np.sum(df.query('evaluated_on==' + str(data_smoothn_steps[j]) + 'and approach=="' + exp_name[i] + '"')['duration'])
         mean_return = np.mean(df.query('evaluated_on==' + str(data_smoothn_steps[j]) + 'and approach=="' + exp_name[i] + '"')['reward'])
@@ -53,9 +51,9 @@ for i in range(0,8):
         mean_returns.append(mean_return)
         mean_vels.append(mean_vel)
         
-    print(exp_name[i] + f' & {mean_returns[0]:.1f} & {20*mean_vels[0]:.2f} & {mean_cots[0]:.3f} && ' + \
-        f'{mean_returns[1]:.1f} & {20*mean_vels[1]:.2f} & {mean_cots[1]:.3f} && ' + \
-        f'{mean_returns[2]:.1f} & {20*mean_vels[2]:.2f} & {mean_cots[2]:.3f}')
+    print(exp_name[i] + f' & {mean_returns[0]:.1f} & {20*mean_vels[0]:.2f} & {mean_cots[0]:.3f}') # && ' + \
+        #f'{mean_returns[1]:.1f} & {20*mean_vels[1]:.2f} & {mean_cots[1]:.3f} && ' + \
+        #f'{mean_returns[2]:.1f} & {20*mean_vels[2]:.2f} & {mean_cots[2]:.3f}')
 
 # Centralized & 2605.9 & 0.178 & 8.224 && 1110.5 & 0.128 & 9.324 && 201.5 & 0.068 & 12.641
 # FullyDecentral & 2673.0 & 0.166 & 6.283 && 974.0 & 0.107 & 7.424 && -137.5 & 0.032 & 14.099

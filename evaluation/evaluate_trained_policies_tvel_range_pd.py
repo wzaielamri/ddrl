@@ -44,10 +44,10 @@ else:
     hf_smoothness_eval = 1.0
 
 # Loading trained models.
-exp_path = [os.getcwd() + '/Results/experiment_3_models_curriculum_tvel/Tvel_QuantrupedMultiEnv_Centralized_TVel', 
-    os.getcwd() + '/Results/experiment_3_models_curriculum_tvel/Tvel_QuantrupedMultiEnv_FullyDecentral_TVel',
-    os.getcwd() + '/Results/experiment_3_models_curriculum_tvel/Tvel_QuantrupedMultiEnv_Local_TVel',
-    os.getcwd() + '/Results/experiment_3_models_curriculum_tvel/Tvel_QuantrupedMultiEnv_TwoSides_TVel']
+exp_path = ["/home/nitro/ray_results/Tvel_eight_QuantrupedMultiEnv_EightFullyDecentral_TVel",
+    "/home/nitro/ray_results/Tvel_eight_QuantrupedMultiEnv_EightDecentral_neighborJoint_TVel"
+    ,"/home/nitro/ray_results/Tvel_eight_QuantrupedMultiEnv_Centralized_TVel",
+    "/home/nitro/ray_results/Tvel_eight_QuantrupedMultiEnv_FullyDecentral_TVel"]
     
 experiment_dirs = [[os.path.join(exp_path_item,dI) for dI in os.listdir(exp_path_item) if os.path.isdir(os.path.join(exp_path_item,dI))] for exp_path_item in exp_path]
 

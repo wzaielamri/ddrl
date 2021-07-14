@@ -4,7 +4,14 @@ import pandas as pd
 import glob
 
 import seaborn as sns
-from evaluation.compare_learning_performance_atEnd import boxplot_annotate_brackets_group
+
+import os, sys
+currentdir = os.path.dirname(os.path.realpath(__file__))
+parentdir = os.path.dirname(currentdir)
+sys.path.append(parentdir)
+
+
+#from evaluation.compare_learning_performance_atEnd import boxplot_annotate_brackets_group
 
 """
     Visualizes generalization to novel, uneven terrain.
@@ -46,7 +53,8 @@ data_smoothn_steps = np.array([1., 0.9, 0.8, 0.7, 0.6])
 # 5 - two contr. diag, 6 - two neighb. contr.
 # 7 - connections towards front
 # Data was generated from compare_generalization_flat.py
-path = 'Results/1_trained_flat_eval' # use your path
+path = '/home/nitro/ray_results/evaluation_1' # use your path
+ # use your path
 all_files = glob.glob(path + "/*.csv")
 
 eval_list = []
@@ -57,11 +65,9 @@ for filename in all_files:
 
 df = pd.concat(eval_list, axis=0, ignore_index=True)
 
-exp_name = ['Centralized', 'FullyDecentral', 'Local', 'SingleDiagonal',
-       'SingleNeighbor', 'SingleToFront', 'TwoDiags', 'TwoSides']
-exp_name_written = ['Centralized', 'Fully \n Decentralized', 'Local \n Neighbors', 
-    'Single \n Diag. N.', 'Single \n Neigh.', 'Towards \n Front',
-    'Two contr. \n diagonal', 'Two contr. \n neighbors']
+exp_name = ['Centralized', 'FullyDecentral', 'EightFullyDecentral', 'neighborJoint','neighborJoint2Legs','neighborJointAllInfo']
+exp_name_written = ['Centralized', 'Four \n Fully \n Decentralized', 'Eight \n Fully \n Decentralized', 'Neigh. \n Joint', 'Neigh. \n Joint  \n 2  \n Legs', 'Neigh. \n Joint  \n All  \n Info']
+
 
 # Plotting functions
 ####################
@@ -76,7 +82,7 @@ ax_arch.set_xlim(1., 0.5)
 ax_arch.set_xticks([1., 0.9, 0.8, 0.7, 0.6])
 #ax_arch.set_ylim(0, 800)  
 
-for i in [0,1,2,7]:
+for i in range(0,len(exp_name)):
     # Use matplotlib's fill_between() call to create error bars.   
     #plt.fill_between(data_smoothn_steps, data_min[i,:],  
      #                data_max[i,:], color=tableau20[i*2 + 1], alpha=0.25)  
@@ -97,7 +103,8 @@ ax_arch.set_xlabel('Smoothness of evaluated terrain', fontsize=12)
 ax_arch.set_ylabel('Mean return per Episode', fontsize=12)
 plt.legend(loc="upper right")
 #plt.plot([0,500], [200,200], color=tableau20[6], linestyle='--')
-
+file_name = "generalization_overSmoothness"
+plt.savefig(file_name + '_legend.pdf')
 
 #########################################
 # Show Violin plot for evaluated runs
@@ -105,7 +112,7 @@ plt.legend(loc="upper right")
 #########################################
 df_mean_eval_06 = pd.DataFrame([], columns=["approach", "seed", "mean", "std_dev"])
 
-for appr_i in range(0,8):
+for appr_i in range(0,len(exp_name)):
     for seed_i in range(0,10):
         select_data_p = df.query('evaluated_on==0.6 and seed==' + str(seed_i) + \
             ' and approach=="' + exp_name[appr_i] + '"')['reward']
@@ -117,7 +124,7 @@ for appr_i in range(0,8):
         df_mean_eval_06 = df_mean_eval_06.append(new_mean_entry, ignore_index=True)
 
 my_pal = {}
-for i in range(0,8):
+for i in range(0,len(exp_name)):
     my_pal[exp_name[i]] = tableau20[i*2]
 
 #df_select = df.loc[df['Evaluate'].isin(['Flat','Height_010'])]
@@ -181,10 +188,10 @@ fig_box.set_xticklabels(exp_name_written)
 # TwoDiags           1.000000        0.336639  1.000000             1.0        1.000000            1.0  1.000000  0.336639
 # TwoSides           0.085101        1.000000  0.012443             1.0        0.241236            1.0  0.336639  1.000000
 
-xpos_box = np.arange(0,8)
-heights_box = [np.max((df_mean_eval_06.loc[df_mean_eval_06["approach"] == exp_name[i]])["mean"]) for i in range(0,8)]
-boxplot_annotate_brackets_group(1, [2], 'p < 0.05', xpos_box, heights_box)
-boxplot_annotate_brackets_group(2, [7], 'p < 0.05', xpos_box, heights_box, offset=100)
+xpos_box = np.arange(0,len(exp_name))
+heights_box = [np.max((df_mean_eval_06.loc[df_mean_eval_06["approach"] == exp_name[i]])["mean"]) for i in range(0,len(exp_name))]
+#boxplot_annotate_brackets_group(1, [2], 'p < 0.05', xpos_box, heights_box)
+#boxplot_annotate_brackets_group(2, [7], 'p < 0.05', xpos_box, heights_box, offset=100)
 #boxplot_annotate_brackets_group(0, [1,2,3,4,5,7], 'p < 0.01', xpos_box, heights_box, offset=500)
 fig.tight_layout()
 
@@ -196,7 +203,7 @@ fig.tight_layout()
 #########################################
 df_mean_eval_08 = pd.DataFrame([], columns=["approach", "seed", "mean", "std_dev"])
 
-for appr_i in range(0,8):
+for appr_i in range(0,len(exp_name)):
     for seed_i in range(0,10):
         select_data_p = df.query('evaluated_on==0.8 and seed==' + str(seed_i) + \
             ' and approach=="' + exp_name[appr_i] + '"')['reward']
@@ -236,9 +243,9 @@ fig_box_08.set_xticklabels(exp_name_written)
 #                 Centralized  FullyDecentral     Local  SingleDiagonal  SingleNeighbor  SingleToFront  TwoDiags  TwoSides
 # FullyDecentral     1.000000        1.000000  0.001068        1.000000        0.008951            1.0  1.000000  0.515138
 
-xpos_box = np.arange(0,8)
-heights_box = [np.max((df_mean_eval_08.loc[df_mean_eval_08["approach"] == exp_name[i]])["mean"]) for i in range(0,8)]
-boxplot_annotate_brackets_group(1, [2,4], 'p < 0.01', xpos_box, heights_box)
+xpos_box = np.arange(0,len(exp_name))
+heights_box = [np.max((df_mean_eval_08.loc[df_mean_eval_08["approach"] == exp_name[i]])["mean"]) for i in range(0,len(exp_name))]
+#boxplot_annotate_brackets_group(1, [2,4], 'p < 0.01', xpos_box, heights_box)
 #boxplot_annotate_brackets_group(7, [6,3], 'p < 0.05', xpos_box, heights_box, offset=300)
 #boxplot_annotate_brackets_group(0, [1,2,3,4,5,7], 'p < 0.01', xpos_box, heights_box, offset=500)
 fig.tight_layout()

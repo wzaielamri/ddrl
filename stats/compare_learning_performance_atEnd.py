@@ -43,6 +43,7 @@ def boxplot_annotate_brackets_group(num1, target_list, data, center, height, dh=
         kwargs['fontsize'] = fs
     plt.text(*mid, text, **kwargs)
     
+    
 """
     Visualizes the learning performances after 20M steps and does 
     statistics (non-parametric, unpaired) on the different groups.
@@ -86,15 +87,10 @@ if __name__ == "__main__":
     # matplotlib.rcParams['ps.fonttype'] = 42
     
     # Load data - ! progress.csv are not given in git (are too huge)
-    exp_path = [os.getcwd() + '/Results/experiment_1_models_architectures_on_flat/HF_10_QuantrupedMultiEnv_Centralized', 
-         os.getcwd() + '/Results/experiment_1_models_architectures_on_flat/HF_10_QuantrupedMultiEnv_FullyDecentral', 
-         os.getcwd() + '/Results/experiment_1_models_architectures_on_flat/HF_10_QuantrupedMultiEnv_Local', 
-         os.getcwd() + '/Results/experiment_1_models_architectures_on_flat/HF_10_QuantrupedMultiEnv_SingleDiagonal', 
-         os.getcwd() + '/Results/experiment_1_models_architectures_on_flat/HF_10_QuantrupedMultiEnv_SingleNeighbor', 
-         os.getcwd() + '/Results/experiment_1_models_architectures_on_flat/HF_10_QuantrupedMultiEnv_SingleToFront', 
-         os.getcwd() + '/Results/experiment_1_models_architectures_on_flat/HF_10_QuantrupedMultiEnv_TwoDiags', 
-         os.getcwd() + '/Results/experiment_1_models_architectures_on_flat/HF_10_QuantrupedMultiEnv_TwoSides'] 
-     
+    exp_path = ["/home/nitro/ray_results/Tvel_eight_QuantrupedMultiEnv_Centralized_TVel",
+        "/home/nitro/ray_results/Tvel_eight_QuantrupedMultiEnv_FullyDecentral_TVel",
+        "/home/nitro/ray_results/Tvel_eight_QuantrupedMultiEnv_EightFullyDecentral_TVel",
+        "/home/nitro/ray_results/Tvel_eight_QuantrupedMultiEnv_EightDecentral_neighborJoint_TVel"]
     experiment_dirs = [[os.path.join(exp_path_item,dI) for dI in os.listdir(exp_path_item) if os.path.isdir(os.path.join(exp_path_item,dI))] for exp_path_item in exp_path]
 
     # Access progress.csv files and accumulate learning performance.
@@ -123,22 +119,22 @@ if __name__ == "__main__":
         print("Loaded ", exp_dir)
 
     # Look at different points in time (5M, 10M, 15M, 20M steps)
-    architecture_samples_at312 = np.zeros((8,10))
+    architecture_samples_at312 = np.zeros((4,10))
     for arch in range(0, architecture_samples_at312.shape[0]):
-        for i in range(0,10):
+        for i in range(0,1):
             architecture_samples_at312[arch][i] = all_exp_data[arch][4][i][311]
-    architecture_samples_at625 = np.zeros((8,10))
+    architecture_samples_at625 = np.zeros((4,10))
     for arch in range(0, architecture_samples_at625.shape[0]):
-        for i in range(0,10):
+        for i in range(0,1):
             architecture_samples_at625[arch][i] = all_exp_data[arch][4][i][624]
-    architecture_samples_at1250 = np.zeros((8,10))
+    architecture_samples_at1250 = np.zeros((4,10))
     for arch in range(0, architecture_samples_at1250.shape[0]):
-        for i in range(0,10):
+        for i in range(0,1):
             architecture_samples_at1250[arch][i] = all_exp_data[arch][4][i][1249]
         
-    architecture_learn_perf_samples_at1250 = np.zeros((8,10))
+    architecture_learn_perf_samples_at1250 = np.zeros((4,10))
     for arch in range(0, architecture_learn_perf_samples_at1250.shape[0]):
-        for i in range(0,10):
+        for i in range(0,1):
             architecture_learn_perf_samples_at1250[arch][i] = all_exp_data[arch][5][i][1249]
     
     #########################################
@@ -153,35 +149,27 @@ if __name__ == "__main__":
     from scipy import stats
     import scikit_posthocs as sp
     stats.kruskal(architecture_samples_at312[0], architecture_samples_at312[1], 
-        architecture_samples_at312[2], architecture_samples_at312[3], 
-        architecture_samples_at312[4], architecture_samples_at312[5], 
-        architecture_samples_at312[6], architecture_samples_at312[7])
+        architecture_samples_at312[2], architecture_samples_at312[3])
     sp.posthoc_mannwhitney(architecture_samples_at312, p_adjust = 'holm')
     sp.posthoc_mannwhitney(architecture_samples_at312, p_adjust = 'bonferroni')
     # OR posthoc_dunn, posthoc_conover
     stats.kruskal(architecture_samples_at625[0], architecture_samples_at625[1], 
-        architecture_samples_at625[2], architecture_samples_at625[3], 
-        architecture_samples_at625[4], architecture_samples_at625[5], 
-        architecture_samples_at625[6], architecture_samples_at625[7])
+        architecture_samples_at625[2], architecture_samples_at625[3])
     sp.posthoc_mannwhitney(architecture_samples_at625, p_adjust = 'holm')
     sp.posthoc_mannwhitney(architecture_samples_at625, p_adjust = 'bonferroni')
     
     stats.kruskal(architecture_samples_at1250[0], architecture_samples_at1250[1], 
-        architecture_samples_at1250[2], architecture_samples_at1250[3], 
-        architecture_samples_at1250[4], architecture_samples_at1250[5], 
-        architecture_samples_at1250[6], architecture_samples_at1250[7])
+        architecture_samples_at1250[2], architecture_samples_at1250[3])
     sp.posthoc_mannwhitney(architecture_samples_at1250, p_adjust = 'holm')
     sp.posthoc_mannwhitney(architecture_samples_at1250, p_adjust = 'bonferroni')
 
     stats.kruskal(architecture_learn_perf_samples_at1250[0], architecture_learn_perf_samples_at1250[1],
-        architecture_learn_perf_samples_at1250[2], architecture_learn_perf_samples_at1250[3],
-        architecture_learn_perf_samples_at1250[4], architecture_learn_perf_samples_at1250[5],
-        architecture_learn_perf_samples_at1250[6], architecture_learn_perf_samples_at1250[7])
+        architecture_learn_perf_samples_at1250[2], architecture_learn_perf_samples_at1250[3])
     sp.posthoc_mannwhitney(architecture_learn_perf_samples_at1250, p_adjust = 'bonferroni')
 
     # Plotting: Box-plot
     ###########
-    arch_names = [exp_path[i].split('_')[-1] for i in range(0,8)]
+    arch_names = [exp_path[i].split('_')[-2] for i in range(0,4)]
     colors = [tableau20[i] for i in range(0,16,2)]
     medianprops = dict(color="black",linewidth=1.5)
     # Plotting functions
@@ -201,10 +189,10 @@ if __name__ == "__main__":
     xpos_box = np.arange(1,9)
     heights_box = np.mean(architecture_learn_perf_samples_at1250, axis=1)
     boxplot_annotate_brackets_group(0, [6], 'p < 0.05', xpos_box, heights_box)
-    boxplot_annotate_brackets_group(7, [6,3], 'p < 0.05', xpos_box, heights_box, offset=300)
+    boxplot_annotate_brackets_group(3, [6,3], 'p < 0.05', xpos_box, heights_box, offset=300)
     boxplot_annotate_brackets_group(0, [1,2,3,4,5,7], 'p < 0.01', xpos_box, heights_box, offset=500)
     fig.tight_layout()
-    
+    plt.show()
     # KruskalResult(statistic=42.42148148148152, pvalue=4.313157988082117e-07)
     # eta2 = 0.464
     # From https://rpkgs.datanovia.com/rstatix/reference/kruskal_effsize.html

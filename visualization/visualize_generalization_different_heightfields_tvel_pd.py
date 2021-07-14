@@ -4,7 +4,7 @@ import pandas as pd
 import glob
 
 import seaborn as sns
-from evaluation.compare_learning_performance_atEnd import boxplot_annotate_brackets_group
+#from evaluation.compare_learning_performance_atEnd import boxplot_annotate_brackets_group
 
 """
     Visualizes generalization to novel, uneven terrain.
@@ -45,7 +45,7 @@ data_smoothn_steps = np.arange(1., 0.5, -0.1) #rray([1., 0.9, 0.8, 0.7, 0.6])
 # 3 - singe diag, 4 - single neig.
 # 5 - two contr. diag, 6 - two neighb. contr.
 # 7 - connections towards front
-path = 'Results/3_trained_cur_tvel_eval' # use your path
+path = '/home/nitro/ray_results/evaluation' # use your path
 all_files = glob.glob(path + "/*.csv")
 
 eval_list = []
@@ -56,11 +56,8 @@ for filename in all_files:
 
 df = pd.concat(eval_list, axis=0, ignore_index=True)
 
-exp_name = ['Centralized', 'FullyDecentral', 'Local', 'SingleDiagonal',
-       'SingleNeighbor', 'SingleToFront', 'TwoDiags', 'TwoSides']
-exp_name_written = ['Centralized', 'Fully \n Decentralized', 'Local \n Neighbors', 
-    'Single \n Diag. N.', 'Single \n Neigh.', 'Towards \n Front',
-    'Two contr. \n diagonal', 'Two contr. \n neighbors']
+exp_name = ['Centralized', 'FullyDecentral', 'EightFullyDecentral', 'neighborJoint']
+exp_name_written = ['Centralized', 'Four \n Fully \n Decentralized', 'Eight \n Fully \n Decentralized', 'Neigh. \n Joint']
 
 # Plotting functions
 ####################
@@ -76,7 +73,7 @@ ax_arch.set_ylim(0., 700.)
 ax_arch.set_xticks([1., 0.9, 0.8, 0.7, 0.6])#, 0.5, 0.4, 0.3, 0.2,])
 #ax_arch.set_ylim(0, 800)  
 
-for i in [0,1,2,7]:
+for i in [0,1,2,3]:
     # Use matplotlib's fill_between() call to create error bars.   
     #plt.fill_between(data_smoothn_steps, data_min[i,:],  
      #                data_max[i,:], color=tableau20[i*2 + 1], alpha=0.25)  
@@ -84,9 +81,9 @@ for i in [0,1,2,7]:
     std_val = np.zeros(5)
     for j in range(0,5):
         mean_val[j] = np.mean(df.query('evaluated_on==' + str(round(data_smoothn_steps[j],2)) + \
-            'and target_velocity=="2"' + 'and approach=="' + exp_name[i] + '"')['reward'])
+            'and target_velocity=="1"' + 'and approach=="' + exp_name[i] + '"')['reward'])
         std_val[j] = np.std(df.query('evaluated_on==' + str(round(data_smoothn_steps[j],2)) + \
-            'and target_velocity=="2"' + 'and approach=="' + exp_name[i] + '"')['reward'])
+            'and target_velocity=="1"' + 'and approach=="' + exp_name[i] + '"')['reward'])
     #a, b = np.polyfit(data_smoothn_steps, mean_val, deg=1)
     # Provides a regression line and the inclination of that line:
     #print(data_smoothn_steps[j], " / ", exp_name[i], " - regression: ", a)
@@ -96,7 +93,7 @@ for i in [0,1,2,7]:
 
 ax_arch.set_xlabel('Smoothness of evaluated terrain', fontsize=12)
 ax_arch.set_ylabel('Mean return per Episode', fontsize=12)
-file_name = "generalization_tvel10_overSmoothness"
+file_name = "generalization_tvel1_overSmoothness"
 plt.savefig(file_name + '.pdf')
 plt.legend(loc="upper right")
 plt.savefig(file_name + '_legend.pdf')
@@ -111,7 +108,7 @@ plt.show()
 df_mean_eval_06_tv2 = pd.DataFrame([], columns=["approach", "seed", "mean", "std_dev"])
 
 # Adjust target_velocity
-select_appr = [0,1,2,7]
+select_appr = [0,1,2,3]
 for appr_i in range(0, len(select_appr)):
     for seed_i in range(0,10):
         select_data_p = df.query('evaluated_on==0.6 and seed==' + str(seed_i) + \
@@ -127,7 +124,7 @@ for appr_i in range(0, len(select_appr)):
 df_mean_eval_06_tv1 = pd.DataFrame([], columns=["approach", "seed", "mean", "std_dev"])
 
 # Adjust target_velocity
-select_appr = [0,1,2,7]
+select_appr = [0,1,2,3]
 for appr_i in range(0, len(select_appr)):
     for seed_i in range(0,10):
         select_data_p = df.query('evaluated_on==0.6 and seed==' + str(seed_i) + \
@@ -163,7 +160,7 @@ fig_box.set_xticklabels(exp_name_written)
 # Statistics not calculated for these data (from old data)
 xpos_box = np.arange(0,4)
 heights_box = [np.max((df_mean_eval_06_tv2.loc[df_mean_eval_06_tv2["approach"] == exp_name[i]])["mean"])-100 for i in range(0,4)]
-boxplot_annotate_brackets_group(2, [1,0], 'p < 0.01', xpos_box, heights_box)
+#boxplot_annotate_brackets_group(2, [1,0], 'p < 0.01', xpos_box, heights_box)
 #boxplot_annotate_brackets_group(2, [7], 'p < 0.05', xpos_box, heights_box, offset=100)
 #boxplot_annotate_brackets_group(0, [1,2,3,4,5,7], 'p < 0.01', xpos_box, heights_box, offset=500)
 fig.tight_layout()

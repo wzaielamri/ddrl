@@ -39,15 +39,19 @@ plt.rcParams['ytick.color']='#333F4B'
 plt.rcParams['pdf.fonttype'] = 42
 
 # Important: requires detailed logs of results (not part of the git).
-exp_path = [os.getcwd() + '/Results/experiment_1/HF_10_QuantrupedMultiEnv_Centralized', 
-     os.getcwd() + '/Results/experiment_1/HF_10_QuantrupedMultiEnv_FullyDecentral', 
-     os.getcwd() + '/Results/experiment_1/HF_10_QuantrupedMultiEnv_Local', 
-     os.getcwd() + '/Results/experiment_1/HF_10_QuantrupedMultiEnv_SingleDiagonal', 
-     os.getcwd() + '/Results/experiment_1/HF_10_QuantrupedMultiEnv_SingleNeighbor', 
-     os.getcwd() + '/Results/experiment_1/HF_10_QuantrupedMultiEnv_SingleToFront', 
-     os.getcwd() + '/Results/experiment_1/HF_10_QuantrupedMultiEnv_TwoDiags', 
-     os.getcwd() + '/Results/experiment_1/HF_10_QuantrupedMultiEnv_TwoSides']
-        
+#exp_path = ["/home/nitro/ray_results/Tvel_eight_QuantrupedMultiEnv_Centralized_TVel",
+#    "/home/nitro/ray_results/Tvel_eight_QuantrupedMultiEnv_FullyDecentral_TVel",
+#    "/home/nitro/ray_results/Tvel_eight_QuantrupedMultiEnv_EightFullyDecentral_TVel",
+#    "/home/nitro/ray_results/Tvel_eight_QuantrupedMultiEnv_EightDecentral_neighborJoint_TVel"]
+ 
+
+exp_path=["/home/nitro/ray_results/Cheetah_1_curriculumMass_BipedMultiEnv_CentralizedCur",
+            "/home/nitro/ray_results/Cheetah_1_curriculumMass_BipedMultiEnv_TwoSidesCur",
+            #"/home/nitro/ray_results/Cheetah_1_1_BipedMultiEnv_TwoSides_AllInfo",
+            "/home/nitro/ray_results/Cheetah_1_curriculumMass_BipedMultiEnv_SixFullyDecentralCur",]
+            #"/home/nitro/ray_results/Cheetah_1_1_BipedMultiEnv_SixDecentral_neighborJoints",
+            #"/home/nitro/ray_results/Cheetah_1_1_BipedMultiEnv_SixDecentral_neighborJointsAllInfo"]
+ 
 experiment_dirs = [[os.path.join(exp_path_item,dI) for dI in os.listdir(exp_path_item) if os.path.isdir(os.path.join(exp_path_item,dI))] for exp_path_item in exp_path]
 
 all_exp_data = []
@@ -76,7 +80,8 @@ ax_arch.spines["top"].set_visible(False)
 ax_arch.spines["right"].set_visible(False) 
 
 #ax_arch.set_yscale('log')
-ax_arch.set_xlim(0, 2e7)
+#ax_arch.set_xlim(0, 2e7)
+ax_arch.set_xlim(0, 5e6)
 #ax_arch.set_ylim(0, 800)  
 
 for i in range(0, len(all_exp_data)):
@@ -87,12 +92,12 @@ for i in range(0, len(all_exp_data)):
 for i in range(0, len(all_exp_data)): 
     plt.plot(time_steps, all_exp_data[i][0], color=tableau20[i*2], lw=1, label=exp_path[i].split('_')[-1])
     #print("Mean reward for ", i, ": ", all_exp_data[i][0][-1], " - at iter 625: ", all_exp_data[i][0][624])
-    print(exp_path[i].split('_')[-1], f' && {all_exp_data[i][0][311]:.2f} & ({all_exp_data[i][1][311]:.2f}) && {all_exp_data[i][0][624]:.2f} & ({all_exp_data[i][1][624]:.2f}) && {all_exp_data[i][0][1249]:.2f} & ({all_exp_data[i][1][1249]:.2f})')
+    #print(exp_path[i].split('_')[-1], f' && {all_exp_data[i][0][311]:.2f} & ({all_exp_data[i][1][311]:.2f}) && {all_exp_data[i][0][624]:.2f} & ({all_exp_data[i][1][624]:.2f}) && {all_exp_data[i][0][1249]:.2f} & ({all_exp_data[i][1][1249]:.2f})')
 ax_arch.set_xlabel('timesteps', fontsize=14)
 ax_arch.set_ylabel('Learning Performance \n Mean Return per Episode', fontsize=14)
 #plt.plot([0,500], [200,200], color=tableau20[6], linestyle='--')
 file_name = 'learning_performance_std'
-plt.savefig(file_name + '.pdf')
+#plt.savefig(file_name + '.pdf')
 plt.legend(loc="lower right")
 plt.savefig(file_name + '_legend.pdf')
 

@@ -7,6 +7,7 @@ from models.glorot_uniform_scaled_initializer import GlorotUniformScaled
 
 tf1, tf, tfv = try_import_tf()
 
+
 class FullyConnectedNetwork_GlorotUniformInitializer(TFModelV2):
     """ A fully connected Network - same as the provided generic one
         (ray.rllib.models.tf.FullyConnectedNetwork), but using the
@@ -33,7 +34,9 @@ class FullyConnectedNetwork_GlorotUniformInitializer(TFModelV2):
             num_outputs = num_outputs // 2
             self.log_std_var = tf.Variable(
                 [0.0] * num_outputs, dtype=tf.float32, name="log_std")
-            self.register_variables([self.log_std_var])
+
+            #not required
+            # self.register_variables([self.log_std_var])
 
         # We are using obs_flat, so take the flattened shape as input.
         inputs = tf.keras.layers.Input(
@@ -115,7 +118,8 @@ class FullyConnectedNetwork_GlorotUniformInitializer(TFModelV2):
         self.base_model = tf.keras.Model(
             inputs, [(logits_out
                       if logits_out is not None else last_layer), value_out])
-        self.register_variables(self.base_model.variables)
+        #not required
+        # self.register_variables(self.base_model.variables)
 
     def forward(self, input_dict, state, seq_lens):
         model_out, self._value_out = self.base_model(input_dict["obs_flat"])

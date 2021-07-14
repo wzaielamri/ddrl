@@ -36,6 +36,7 @@ hf_smoothness_eval = 1.0
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--ray_results_dir", required=False)
+parser.add_argument("--hf_smoothness", required=False)
 args = parser.parse_args()
 if args.ray_results_dir is not None and args.ray_results_dir: 
     ray_results_dir = args.ray_results_dir
@@ -46,14 +47,12 @@ if args.hf_smoothness is not None:
 else:
     hf_smoothness_eval = 1.0
  
-exp_path = [os.getcwd() + '/Results/experiment_1_models_architectures_on_flat/HF_10_QuantrupedMultiEnv_FullyDecentral', 
-     os.getcwd() + '/Results/experiment_1_models_architectures_on_flat/HF_10_QuantrupedMultiEnv_Local', 
-     os.getcwd() + '/Results/experiment_1_models_architectures_on_flat/HF_10_QuantrupedMultiEnv_SingleDiagonal', 
-     os.getcwd() + '/Results/experiment_1_models_architectures_on_flat/HF_10_QuantrupedMultiEnv_SingleNeighbor', 
-     os.getcwd() + '/Results/experiment_1_models_architectures_on_flat/HF_10_QuantrupedMultiEnv_SingleToFront', 
-     os.getcwd() + '/Results/experiment_1_models_architectures_on_flat/HF_10_QuantrupedMultiEnv_TwoDiags', 
-     os.getcwd() + '/Results/experiment_1_models_architectures_on_flat/HF_10_QuantrupedMultiEnv_TwoSides']
-         
+
+exp_path=["/home/nitro/ray_results/HF_1_QuantrupedMultiEnv_Centralized",
+            "/home/nitro/ray_results/HF_1_QuantrupedMultiEnv_FullyDecentral",
+            "/home/nitro/ray_results/HF_1_QuantrupedMultiEnv_EightFullyDecentral",
+            "/home/nitro/ray_results/HF_1_QuantrupedMultiEnv_EightDecentral_neighborJoint"]
+    
 experiment_dirs = [[os.path.join(exp_path_item,dI) for dI in os.listdir(exp_path_item) if os.path.isdir(os.path.join(exp_path_item,dI))] for exp_path_item in exp_path]
 
 ray.init()
@@ -68,7 +67,7 @@ exp_it = 0
 for exp_dir in experiment_dirs:
     print("EVALUATE EXPERIMENT: ", exp_path[exp_it].split('_')[-1])
     exp_params = [os.path.join(exp_d, 'params.pkl') for exp_d in exp_dir]
-    exp_checkpoint = [os.path.join(exp_d, 'checkpoint_1250', 'checkpoint-1250') for exp_d in exp_dir]
+    exp_checkpoint = [os.path.join(exp_d, 'checkpoint_313', 'checkpoint-313') for exp_d in exp_dir]
 
     all_rew = []
     all_steps = []
