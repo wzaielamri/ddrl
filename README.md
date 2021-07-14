@@ -35,18 +35,16 @@ We compare different types of controllers that vary along two major feature dime
 
 Architectures Description:
 
-Centralized: 1 Centralized agent.
-
-TwoSides: 2 agents fully decentralized.
-AllInfo: 2 agents with all obs informations from all joints.
-GCN: 2 agents with only obs informations from the corresponding leg and the previous actions of only the other leg.
-TwoSidesCur: 2 agents fully decentralized. trained with curriculum training, different weights factors: (0.1, 1, 0.1) in timestamps: (250000, 2500000, 250000)
-
-SixFullyDecentral: 6 agents fully decentralized.
-neighborJoints: 6 agents with obs informations from only the corresponding leg.
-neighborJointsAllInfo: 6 agents with all possible informations from all joints.
-BioGraph: 6 agents with graph connections derived from biology.
-SixFullyDecentralCur: 6 agents fully decentralized. trained with curriculum training, different weights factors: (0.1, 1, 0.1) in timestamps: (250000, 2500000, 250000)
+- Centralized: 1 Centralized agent.
+- TwoSides: 2 agents fully decentralized.
+- AllInfo: 2 agents with all obs informations from all joints.
+- GCN: 2 agents with only obs informations from the corresponding leg and the previous actions of only the other leg.
+- TwoSidesCur: 2 agents fully decentralized. trained with curriculum training, different weights factors: (0.1, 1, 0.1) in timestamps: (250000, 2500000, 250000)
+- SixFullyDecentral: 6 agents fully decentralized.
+- neighborJoints: 6 agents with obs informations from only the corresponding leg.
+- neighborJointsAllInfo: 6 agents with all possible informations from all joints.
+- BioGraph: 6 agents with graph connections derived from biology.
+- SixFullyDecentralCur: 6 agents fully decentralized. trained with curriculum training, different weights factors: (0.1, 1, 0.1) in timestamps: (250000, 2500000, 250000)
 
 ## Requirements
 
